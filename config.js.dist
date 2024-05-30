@@ -1,0 +1,17 @@
+// inputFile : The file path of the original Translation.xml
+// outputFile : The file path of the translated XML file
+// langChain : An array of ISO 639-1 languages codes, representing the translation "chain"
+// saveInterval : The number of entries beetween each XML file save (0 = no save)
+
+export const config = {
+	inputFile: 'input/Translation.xml',
+	outputFile: 'output/Translation_translated.xml',
+	langChain : [
+		'hr', 'az', 'ka', 'th', 'tr', 'hu', 'ga', 'ar', 'fi', 'hr',
+		'nl', 'uk', 'sl', 'zh-CN', 'ka', 'lt', 'gl', 'mk', 'fi', 'lv',
+		'fr', 'ta', 'gl', 'nl', 'de', 'fr', 'ur', 'bg', 'fr', 'sq',
+		'az', 'ur', 'hu', 'ar', 'zh-CN', 'bg', 'kn', 'hi', 'is', 'hu',
+		'fi', 'af', 'nl', 'cs', 'tr', 'hu', 'sv', 'lv', 'mt', 'en'
+	],
+	saveInterval: 0
+};
