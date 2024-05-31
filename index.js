@@ -26,7 +26,7 @@ function loadAndParseXML() {
 
 async function translateEntry(entry, index, length) {
 	for (let i = 0; i < config.langChain.length; i++) {
-		process.stdout.write(`>> ${index + 1} / ${length} entries (${i + 1} / ${config.langChain.length} languages)\r`);
+		process.stdout.write(`>> ${index + 1} / ${length} entries (${i + 1} / ${config.langChain.length} languages)     \r`);
 		try {
 			const translation = await translate(entry.value, {to: config.langChain[i]});
 			entry.value = translation.text;
@@ -35,6 +35,7 @@ async function translateEntry(entry, index, length) {
 			process.exit(1);
 		}
 	}
+	process.stdout.clearLine(1);
 }
 
 
