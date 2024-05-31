@@ -6,8 +6,9 @@ Using the base game English translation file from [Outer Wilds Translation Mod U
 
 ## How to use
 
-1. Create a copy of the `config.js.dist` file and rename it `config.js`.
-2. Edit the `config.js` file according to your needs.
+1. Install the necessary modules with `npm install`.
+2. Create a copy of the `config.js.dist` file and rename it `config.js`.
+3. Edit the `config.js` file according to your needs.
 
 | Variable       | Description                                                                |
 |----------------|----------------------------------------------------------------------------|
