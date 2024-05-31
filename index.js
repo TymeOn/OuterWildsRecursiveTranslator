@@ -16,6 +16,7 @@ function loadAndParseXML() {
 		data = xmlParser.parse(rawData);
 	} catch(e) {
 		console.error('Error when parsing XML input :', e.stack);
+		process.exit(1);
 	}
 }
 
@@ -31,6 +32,7 @@ async function translateEntry(entry, index, length) {
 			entry.value = translation.text;
 		} catch (e) {
 			console.error(`Error when translating "${entry.value}" to "${config.langChain[i]}": `, e.stack);
+			process.exit(1);
 		}
 	}
 }
@@ -62,6 +64,7 @@ function buildAndSaveXML() {
 		fs.writeFileSync(config.outputFile, updatedXML, 'utf8');
 	} catch (e) {
 		console.error('Error when saving XML file:', e.stack);
+		process.exit(1);
 	}
 }
 
