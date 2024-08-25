@@ -4,6 +4,7 @@ import { config } from './config.js';
 import translate from '@iamtraction/google-translate';
 
 let data = null;
+let nameList = {};
 
 
 // LOAD AND PARSE XML FUNCTION
@@ -24,9 +25,23 @@ function loadAndParseXML() {
 // TRANSLATION FUNCTION
 // --------------------
 
-async function translateEntry(entry, index, length) {
+async function translateEntry(entry, index, length, isName = false) {
+	let nameMatch = entry.value.match(/^[A-Z]*:\s/g);
+	let name = '';
+
+	if (nameMatch && nameMatch.length > 0 && nameMatch[0] > '') {
+		name = nameMatch[0].slice(0, -2);
+		entry.value = entry.value.substring(nameMatch[0].length);
+	}
+
 	for (let i = 0; i < config.langChain.length; i++) {
-		process.stdout.write(`>> ${index + 1} / ${length} entries (${i + 1} / ${config.langChain.length} languages)     \r`);
+
+		if (isName) {
+			process.stdout.write(`>> Name "${entry.value}" (Entry ${index + 1} / ${length}) (${i + 1} / ${config.langChain.length} languages)     \r`);
+		} else {
+			process.stdout.write(`>> ${index + 1} / ${length} entries (${i + 1} / ${config.langChain.length} languages)     \r`);
+		}
+
 		try {
 			const translation = await translate(entry.value, {to: config.langChain[i]});
 			entry.value = translation.text;
@@ -35,6 +50,17 @@ async function translateEntry(entry, index, length) {
 			process.exit(1);
 		}
 	}
+	
+	if (name > '') {
+		if (nameList[name] === undefined) {
+			let nameEntry = {value: name};
+			await translateEntry(nameEntry, index, length, true);
+			nameList[name] = nameEntry.value.toUpperCase();
+		}
+		
+		entry.value = nameList[name] + ': ' + entry.value;
+	}
+
 	process.stdout.clearLine(1);
 }
 
