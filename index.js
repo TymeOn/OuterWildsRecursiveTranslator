@@ -1,7 +1,7 @@
 import { XMLParser, XMLBuilder } from 'fast-xml-parser';
 import fs from 'fs';
 import { config } from './config.js';
-import translate from '@iamtraction/google-translate';
+import { MET } from 'bing-translate-api';
 
 let data = null;
 let nameList = {};
@@ -34,6 +34,9 @@ async function translateEntry(entry, index, length, isName = false) {
 		entry.value = entry.value.substring(nameMatch[0].length);
 	}
 
+	let saveColorRegex = /(<color=.*?>)(.*?)<\/color>/g;
+	entry.value = entry.value.replaceAll(saveColorRegex, '<div class="notranslate">$1</div>$2<div class="notranslate"></color></div>');
+
 	for (let i = 0; i < config.langChain.length; i++) {
 
 		if (isName) {
@@ -43,8 +46,13 @@ async function translateEntry(entry, index, length, isName = false) {
 		}
 
 		try {
-			const translation = await translate(entry.value, {to: config.langChain[i]});
-			entry.value = translation.text;
+			const currentLang = config.langChain[i-1] ? config.langChain[i-1] : config.startLang;
+			const translation = await MET.translate(entry.value, currentLang, config.langChain[i], {
+				translateOptions: {
+				  textType: 'html'
+				}
+			});
+			entry.value = translation[0].translations[0].text;
 		} catch (e) {
 			console.error(`Error when translating "${entry.value}" to "${config.langChain[i]}": `, e.stack);
 			process.exit(1);
@@ -60,6 +68,9 @@ async function translateEntry(entry, index, length, isName = false) {
 		
 		entry.value = nameList[name] + ': ' + entry.value;
 	}
+	
+	let restoreRegex = /<div class="notranslate">(<color=.*?>)<\/div>(.*?)<div class="notranslate"><\/color><\/div>/g;
+	entry.value = entry.value.replaceAll(restoreRegex, '$1$2</color>');
 
 	process.stdout.clearLine(1);
 }

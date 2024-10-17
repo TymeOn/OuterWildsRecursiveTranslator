@@ -18,7 +18,7 @@
 	},
 	"homepage": "https://github.com/TymeOn/OuterWildsRecursiveTranslator#readme",
 	"dependencies": {
-		"@iamtraction/google-translate": "^2.0.1",
+		"bing-translate-api": "^4.0.2",
 		"fast-xml-parser": "^4.4.0",
 		"fs": "^0.0.1-security"
 	}
