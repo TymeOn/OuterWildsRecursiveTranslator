@@ -81,7 +81,10 @@ async function translateEntry(entry, index, length, isName = false) {
 
 async function processEntries(entries) {
 	for (let i = 0; i < entries.length; i++) {
-		await translateEntry(entries[i], i, entries.length);
+
+		if (entries[i].value > '') {
+			await translateEntry(entries[i], i, entries.length);
+		}
 
 		if (config.saveInterval > 0) {
 			if (((i + 1) % config.saveInterval) === 0) {
